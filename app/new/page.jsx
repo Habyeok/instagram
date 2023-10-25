@@ -45,8 +45,8 @@ export default function New() {
               <img className={`rounded-full w-10 h-10`} src={backgroundImage} />
             </div>
             <div>
-              <div className="font-semibold">{user.name}</div>
-              <div className="font-light">위치</div>
+              <div className="font-semibold text-black">{user.name}</div>
+              <div className="font-light text-black">위치</div>
             </div>
           </div>
           {/* 더보기 버튼 */}
@@ -54,7 +54,7 @@ export default function New() {
         </div>
         <div
           id="content"
-          className="w-[400px] h-[400px] flex justify-center items-center"
+          className="w-[400px] h-[400px] flex justify-center items-center text-black"
         >
           {url ? (
             <img
@@ -91,7 +91,7 @@ export default function New() {
           <input
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="border-2 w-full h-12 rounded-sm"
+            className="border-2 w-full h-12 rounded-sm text-black"
           />
         </div>
       </div>
