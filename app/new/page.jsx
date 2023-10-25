@@ -16,7 +16,7 @@ export default function New() {
   const router = useRouter();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 text-black">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="w-[400px] bg-white mb-1">
         <div id="header" className="flex items-center justify-between p-2">
           {/* profile */}
@@ -27,8 +27,8 @@ export default function New() {
               bg-contain mr-2`}
             />
             <div>
-              <div className="font-semibold">{"작성자"}</div>
-              <div className="font-light">{"위치"}</div>
+              <div className="font-semibold">작성자</div>
+              <div className="font-light">위치</div>
             </div>
           </div>
           {/* 더보기 버튼 */}
@@ -51,11 +51,15 @@ export default function New() {
                 type="file"
                 style={{ display: "none" }}
                 onChange={async (e) => {
-                  const file = e.target.files[0];
-                  const generatedId = uuidv4();
-                  await uploadBytes(ref(storage, generatedId), file);
-                  const url = await getDownloadURL(ref(storage, generatedId));
-                  setUrl(url);
+                  try {
+                    const file = e.target.files[0];
+                    const generatedId = uuidv4();
+                    await uploadBytes(ref(storage, generatedId), file);
+                    const url = await getDownloadURL(ref(storage, generatedId));
+                    setUrl(url);
+                  } catch (error) {
+                    console.error(error);
+                  }
                 }}
               />
               <label htmlFor="file-upload" className="cursor-pointer">
@@ -84,17 +88,17 @@ export default function New() {
               id: "xxxx",
               author: {
                 id: "awnklfneawe",
-                name: "Habyeok",
+                name: "frogman",
                 profileImg:
                   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
               },
-              location: "Seoul",
+              location: "seoul",
               image: url,
               text: value,
               liked: [],
             });
-            console.log(docRef);
-            router.push("/");
+            console.log(docRef); // undefined
+            router.push("/"); //
           } catch (error) {
             console.error(error);
           }
