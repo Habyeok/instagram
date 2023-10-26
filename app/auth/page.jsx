@@ -42,12 +42,11 @@ export default function Auth() {
       <button onClick={handleGoogleLoginButtonClick}>구글 로그인</button>
       <div>
         <label>name : </label>
-        <input className="text-black" value={id} onChange={(e) => setId(e.target.value)} />
+        <input value={id} onChange={(e) => setId(e.target.value)} />
       </div>
       <div>
         <label>PW : </label>
         <input
-          className="text-black"
           type="password"
           value={pw}
           onChange={(e) => setPw(e.target.value)}

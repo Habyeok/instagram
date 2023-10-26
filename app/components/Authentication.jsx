@@ -18,7 +18,7 @@ export const Authentication = () => {
     <>
       {user && (
         <button
-          className="fixed top-2 left-2 text-white"
+          className="fixed top-2 left-2"
           onClick={() => {
             signOut();
             localStorage.removeItem("user");
