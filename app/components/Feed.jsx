@@ -4,7 +4,7 @@ import { firestore } from "../../firebase";
 import { Bookmark } from "../icons/bookmark";
 import { Comment } from "../icons/comment";
 import { DM } from "../icons/DM";
-import { Heart } from "../icons/Heart";
+import { Heart } from "../icons/heart";
 import { Menu } from "../icons/Menu";
 import { doc, updateDoc, arrayRemove, arrayUnion } from "@firebase/firestore";
 import { useRouter } from "next/navigation";
