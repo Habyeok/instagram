@@ -15,6 +15,7 @@ export default function Detail() {
     fetchComments,
     updateContent,
     addComment,
+    getChatRoom,
   } = useContents();
   const [comments, setComments] = useState([]);
   const targetContent = getContent(params.id);
@@ -43,6 +44,7 @@ export default function Detail() {
         }}
         comments={comments}
         commentInputVisible
+        getChatRoom={getChatRoom}
       />
     </main>
   );

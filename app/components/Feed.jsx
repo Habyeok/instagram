@@ -1,10 +1,9 @@
 "use client"
 
-import { useState } from "react";
 import { firestore } from "../../firebase";
 import { Bookmark } from "../icons/bookmark";
 import { Comment } from "../icons/comment";
-import { Share } from "../icons/share";
+import { DM } from "../icons/DM";
 import { Heart } from "../icons/Heart";
 import { Menu } from "../icons/Menu";
 import { doc, updateDoc, arrayRemove, arrayUnion } from "@firebase/firestore";
@@ -48,6 +47,7 @@ export const Feed = ({
   onAddComment,
   comments,
   commentInputVisible,
+  getChatRoom
 }) => {
   const router = useRouter();
 
@@ -111,7 +111,15 @@ export const Feed = ({
           <button onClick={() => router.push(`/detail/${content.id}`)}>
             <Comment />
           </button>
-          <Share />
+          <button
+            disabled={content.author.id === loggedInUser.id}
+            onClick={async () => {
+              const chatRoomId = await getChatRoom(content);
+              router.push(`chat/${chatRoomId}`);
+            }}
+          >
+            <DM />
+          </button>
         </div>
         <div>
           <Bookmark />
