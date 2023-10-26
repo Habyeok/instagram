@@ -4,8 +4,8 @@ import { Feed } from "./components/Feed";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "./store/useAuth";
-import { useContents } from "./store/useContents";
+import { useAuth } from "../store/useAuth";
+import { useContents } from "../store/useContents";
 
 export default function Home() {
   const { contents, fetchContents, updateContent, addComment, getChatRoom } = 

@@ -98,7 +98,7 @@ export const Feed = ({
       <div id="content" className="w-[400px] h-[400px]">
         <img
           onDoubleClick={updateHeartButtonClick}
-          className="object-cover	w-[400px] h-[400px]"
+          className="object-cover	w-screen sm:w-[400px] h-[400px]"
           src={content.image}
           alt="img"
         />

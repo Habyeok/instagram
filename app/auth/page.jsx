@@ -12,7 +12,7 @@ import {
 } from "@firebase/firestore";
 import { auth, firestore } from "../../firebase";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../store/useAuth";
+import { useAuth } from "../../store/useAuth";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 export default function Auth() {
@@ -119,7 +119,7 @@ export default function Auth() {
           };
           await setDoc(doc(firestore, "users", docID), newUser);
           localStorage.setItem("user", JSON.stringify(newUser));
-          signIn(useUser);
+          signIn(newUser);
           window.alert("회원가입에 완료했습니다");
           router.push("/");
         }}

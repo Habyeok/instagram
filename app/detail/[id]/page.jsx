@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useContents } from "../../store/useContents";
+import { useContents } from "../../../store/useContents";
 import { useParams } from "next/navigation";
 import { Feed } from "../../components/Feed";
-import { useAuth } from "../../store/useAuth";
+import { useAuth } from "../../../store/useAuth";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Detail() {
   const params = useParams();
@@ -41,6 +42,16 @@ export default function Detail() {
         onAddComment={async (content, comment) => {
           await addComment(content, comment);
           fetchComments(params.id).then((res) => setComments(res));
+          const notificationId = uuidv4();
+          await addDoc(
+            collection(firestore, "alarms", content.author.id, "notifications"),
+            {
+              id: notificationId,
+              message: `[new comment]\n${user.name} : ${comment}`,
+              redirectURL: `/detail/${content.id}`,
+              read: false,
+            }
+          );
         }}
         comments={comments}
         commentInputVisible

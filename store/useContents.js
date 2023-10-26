@@ -8,7 +8,7 @@ import {
   doc,
 } from "@firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
-import { firestore } from "../../firebase";
+import { firestore } from "../firebase";
 import { useAuth } from "./useAuth";
 
 export const useContents = create((set, get) => ({
@@ -80,7 +80,7 @@ export const useContents = create((set, get) => ({
     const id = uuidv4();
     const key = [author.id, targetContent.author.id].sort().join(",");
 
-    // 이미 채팅바이 있는지 체크한다
+    // 이미 채팅방이 있는지 체크한다
     const chatRoomSnapshot = await getDocs(
       query(collection(firestore, "chats"), where("guests", "==", key))
     );
