@@ -1,33 +1,42 @@
 "use client";
 
 import { Feed } from "./components/Feed";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { collection, getDocs } from "@firebase/firestore";
-import { firestore } from "../firebase";
+import Link from "next/link";
 import { useAuth } from "./store/useAuth";
+import { useContents } from "./store/useContents";
 
 export default function Home() {
-  const [contents, setContents] = useState([]);
+  const { contents, fetchContents, updateContent, addComment, getChatRoom } = 
+    useContents();
   const router = useRouter();
   const { user } = useAuth();
 
   useEffect(() => {
-    fetchFeeds();
+    fetchContents();
   }, []);
 
-  const fetchFeeds = async () => {
-    const snapShot = await getDocs(collection(firestore, "feeds"));
-    const nextContents = [];
-    snapShot.forEach((doc) => nextContents.push(doc.data()));
-    setContents(nextContents);
-  };
+  if (!user) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <Link href="/auth"> 로그인을 해주세요</Link>
+      </main>
+    );
+  }
 
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-between p-24 text-black">
         {contents.map((content, index) => (
-          <Feed key={index} content={content} />
+          <Feed 
+            key={index} 
+            content={content} 
+            loggedInUser={user}
+            onUpdateContents={updateContent}
+            onAddComment={addComment}
+            getChatRoom={getChatRoom}
+          />
         ))}
       </main>
       <button

@@ -1,8 +1,14 @@
+"use client"
+
+import { useState } from "react";
+import { firestore } from "../../firebase";
 import { Bookmark } from "../icons/bookmark";
 import { Comment } from "../icons/comment";
 import { Share } from "../icons/share";
 import { Heart } from "../icons/Heart";
 import { Menu } from "../icons/Menu";
+import { doc, updateDoc, arrayRemove, arrayUnion } from "@firebase/firestore";
+import { useRouter } from "next/navigation";
 
 /**
  * User
@@ -14,6 +20,15 @@ import { Menu } from "../icons/Menu";
  */
 
 /**
+ * Comment
+ * {
+ *   id: string;
+ *   text: string
+ *   author: User
+ * }
+ */
+
+/**
  * Content
  * {
  *   id: string;
@@ -21,14 +36,43 @@ import { Menu } from "../icons/Menu";
  *   location: string;
  *   image: string;
  *   text: string;
- *   liked: User[]
+ *   liked: User.id[]
+ *   comments
  * }
  */
 
-export const Feed = ({ content }) => {
+export const Feed = ({ 
+  loggedInUser,
+  content,
+  onUpdateContents,
+  onAddComment,
+  comments,
+  commentInputVisible,
+}) => {
+  const router = useRouter();
+
   const backgroundImage =
     content.author.profileImg ||
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+  const likedContent = (content.liked || []).some(
+    (id) => loggedInUser.id === id
+  );
+
+  const updateHeartButtonClick = async () => {
+    const nextLiked = likedContent
+      ? arrayRemove(loggedInUser.id)
+      : arrayUnion(loggedInUser.id);
+    await updateDoc(doc(firestore, "feeds", content.id), {
+      liked: nextLiked,
+    });
+    const nextContent = {
+      ...content,
+      liked: likedContent
+        ? content.liked.filter((id) => id !== loggedInUser.id)
+        : [...content.liked, loggedInUser.id],
+    };
+    onUpdateContents(nextContent);
+  };
 
   return (
     <div className="w-[400px] bg-white mb-1">
@@ -53,6 +97,7 @@ export const Feed = ({ content }) => {
       </div>
       <div id="content" className="w-[400px] h-[400px]">
         <img
+          onDoubleClick={updateHeartButtonClick}
           className="object-cover	w-[400px] h-[400px]"
           src={content.image}
           alt="img"
@@ -60,8 +105,12 @@ export const Feed = ({ content }) => {
       </div>
       <div id="footer" className="flex items-center justify-between p-2">
         <div className="flex items-center w-1/4 justify-between">
-          <Heart />
-          <Comment />
+          <button onClick={updateHeartButtonClick}>
+            <Heart color={likedContent ? "red" : null} />
+          </button>
+          <button onClick={() => router.push(`/detail/${content.id}`)}>
+            <Comment />
+          </button>
           <Share />
         </div>
         <div>
@@ -77,8 +126,27 @@ export const Feed = ({ content }) => {
           <b>{content.author.name}</b> {content.text}
         </div>
         {/* 내가 작성한 컨텐츠의 글 */}
-        {/* 댓글들 */}
+        {(comments || []).map((comment) => (
+          <div key={comment.id}>
+            <b>{comment.author.name}</b> {comment.text}
+          </div>
+        ))}
       </div>
+      {commentInputVisible && (
+        <div className="p-2">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const comment = e.target[0].value;
+              if (!comment) return;
+              await onAddComment(content, comment);
+              e.target[0].value = "";
+            }}
+          >
+            <b>{loggedInUser.name}</b> <input />
+          </form>
+        </div>
+      )}
     </div>
   );
 };
